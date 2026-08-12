@@ -51,8 +51,29 @@
     .badge.site { background-color: var(--badge-site); }
     .badge.personal { background-color: var(--badge-personal); }
     .miles-text { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
     .delete-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 1.1rem; padding: 4px; }
     .delete-btn:hover { color: #ff5252; }
+    .map-btn {
+      background: none;
+      border: none;
+      color: var(--accent-color);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .map-btn:hover { opacity: 0.8; }
+
     .destination { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
     .card-meta { font-size: 0.8rem; color: var(--text-secondary); }
 
@@ -154,7 +175,7 @@
   </div>
 
   <script>
-    // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (ON A SINGLE LINE)
+    // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (MUST BE ON A SINGLE LINE)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqR0q3_uY7MdwQajbUENcTKw2Sf88-_9QrYP9DicZELO3CADpQ_4Ssr6hAoVroLmu6/exec";
 
     // Tab Navigation
@@ -245,6 +266,9 @@
 
             let milesDisplay = (trip.miles && trip.miles > 0) ? `<span>${trip.miles} mi</span>` : '';
 
+            // Search URL for Google Maps
+            let mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(trip.jobsite);
+
             const card = document.createElement('div');
             card.className = 'trip-card';
             card.innerHTML = `
@@ -253,7 +277,10 @@
                   <span class="badge ${badgeClass}">${trip.reason}</span>
                   ${milesDisplay ? `<span class="miles-text">${milesDisplay}</span>` : ''}
                 </div>
-                <button class="delete-btn" onclick="deleteTrip(${trip.rowIndex})">🗑️</button>
+                <div class="card-actions">
+                  <button class="delete-btn" onclick="deleteTrip(${trip.rowIndex})" title="Delete Trip">🗑️</button>
+                  <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="map-btn" title="Open in Google Maps">📍</a>
+                </div>
               </div>
               <div class="destination">${trip.jobsite}</div>
               <div class="card-meta">${trip.timestamp} · Odo: ${Number(trip.odometer).toLocaleString()}</div>
