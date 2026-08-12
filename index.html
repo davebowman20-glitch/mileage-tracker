@@ -40,8 +40,9 @@
     input:focus, select:focus { border-color: var(--accent-color); }
     .submit-btn { width: 100%; padding: 16px; background-color: var(--accent-color); color: #000; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 8px; }
 
-    /* Trip History List (Matching Image) */
-    .trip-card { background-color: var(--card-bg); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid #252525; position: relative; }
+    /* Trip Cards & Jobsite Cards */
+    .trip-card, .jobsite-card { background-color: var(--card-bg); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid #252525; position: relative; }
+    .jobsite-card { display: flex; justify-content: space-between; align-items: center; }
     .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .badge-group { display: flex; align-items: center; gap: 8px; }
     .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: #fff; }
@@ -98,7 +99,8 @@
         </div>
         <div class="form-group">
           <label for="jobsite">Jobsite / Destination</label>
-          <input type="text" id="jobsite" required placeholder="e.g. 17 Wynforte Lodge">
+          <input type="text" id="jobsite" list="jobsiteSuggestions" required placeholder="e.g. 17 Wynforte Lodge" autocomplete="off">
+          <datalist id="jobsiteSuggestions"></datalist>
         </div>
         <button type="submit" id="submitBtn" class="submit-btn">Log Trip</button>
       </form>
@@ -120,9 +122,7 @@
 
     <!-- TAB 4: JOBSITES -->
     <div id="tab-jobsites" class="tab-content">
-      <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; text-align: center;">
-        <p style="color: var(--text-secondary);">Saved jobsites will appear here.</p>
-      </div>
+      <div id="jobsitesList">Loading jobsites...</div>
     </div>
 
   </div>
@@ -148,9 +148,9 @@
   </div>
 
   <script>
-    // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+    // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (ON A SINGLE LINE)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqR0q3_uY7MdwQajbUENcTKw2Sf88-_9QrYP9DicZELO3CADpQ_4Ssr6hAoVroLmu6/exec";
-   
+
     // Tab Navigation
     function switchTab(tabId, title, btn) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -160,10 +160,11 @@
       document.getElementById('pageTitle').textContent = title;
 
       if (tabId === 'history') fetchHistory();
+      if (tabId === 'jobsites') fetchJobsites();
     }
 
-    // Fetch Last Odometer
-    function loadLatestOdometer() {
+    // Fetch Last Odometer & Pre-load Jobsites for auto-suggest
+    function loadInitialData() {
       fetch(SCRIPT_URL)
         .then(res => res.json())
         .then(data => {
@@ -171,8 +172,23 @@
             document.getElementById('latestOdo').textContent = Number(data.latestOdometer).toLocaleString() + " mi";
           }
         });
+
+      // Load jobsites into datalist for auto-suggest
+      fetch(SCRIPT_URL + "?action=getJobsites")
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            const list = document.getElementById('jobsiteSuggestions');
+            list.innerHTML = "";
+            data.forEach(item => {
+              const opt = document.createElement('option');
+              opt.value = item.name;
+              list.appendChild(opt);
+            });
+          }
+        });
     }
-    window.addEventListener('DOMContentLoaded', loadLatestOdometer);
+    window.addEventListener('DOMContentLoaded', loadInitialData);
 
     // Form Submit
     document.getElementById('mileageForm').addEventListener('submit', function(e) {
@@ -195,7 +211,7 @@
           document.getElementById('mileageForm').reset();
           submitBtn.disabled = false;
           submitBtn.textContent = 'Log Trip';
-          loadLatestOdometer();
+          loadInitialData();
         });
     });
 
@@ -241,13 +257,42 @@
         });
     }
 
+    // Fetch Jobsites List
+    function fetchJobsites() {
+      const container = document.getElementById('jobsitesList');
+      container.innerHTML = "Loading jobsites...";
+
+      fetch(SCRIPT_URL + "?action=getJobsites")
+        .then(res => res.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            container.innerHTML = "<p style='color:#777; text-align:center;'>No saved jobsites found.</p>";
+            return;
+          }
+
+          container.innerHTML = "";
+          data.forEach(site => {
+            const card = document.createElement('div');
+            card.className = 'jobsite-card';
+            card.innerHTML = `
+              <div>
+                <div class="destination" style="margin-bottom:2px;">${site.name}</div>
+                <div class="card-meta">${site.count} trip${site.count > 1 ? 's' : ''} logged</div>
+              </div>
+              <span class="badge site">Active</span>
+            `;
+            container.appendChild(card);
+          });
+        });
+    }
+
     // Delete Trip Handler
     function deleteTrip(rowIndex) {
       if (confirm("Are you sure you want to delete this trip record?")) {
         fetch(SCRIPT_URL + "?action=delete&rowIndex=" + rowIndex, { method: 'POST', mode: 'no-cors' })
           .then(() => {
             fetchHistory();
-            loadLatestOdometer();
+            loadInitialData();
           });
       }
     }
