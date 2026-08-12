@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Van Tracker</title>
+  <title>Bowman Decor - Mileage Tracker</title>
   <style>
     :root {
       --bg-color: #121212;
       --card-bg: #1e1e1e;
       --input-bg: #2a2a2a;
-      --accent-orange: #f59e0b;
-      --accent-hover: #d97706;
-      --text-main: #ffffff;
-      --text-muted: #9ca3af;
+      --accent-color: #ff9800;
+      --text-color: #ffffff;
+      --text-secondary: #b0b0b0;
       --border-color: #333333;
     }
 
@@ -25,259 +24,250 @@
 
     body {
       background-color: var(--bg-color);
-      color: var(--text-main);
+      color: var(--text-color);
       display: flex;
-      flex-direction: column;
-      height: 100vh;
-      max-width: 480px;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 450px;
       margin: 0 auto;
-      position: relative;
     }
 
-    /* Main Container */
-    .content-area {
-      flex: 1;
-      padding: 24px 20px;
-      overflow-y: auto;
-      padding-bottom: 90px;
-    }
-
-    /* Header Container with Logo */
-    .header-container {
+    .header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: 24px;
+      padding-top: 12px;
     }
 
-    h1 {
-      font-size: 26px;
+    .title-area h1 {
+      font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 4px;
     }
 
-    .sub-header {
-      font-size: 14px;
-      color: var(--text-muted);
+    .current-odometer {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
     }
 
-    .sub-header span {
-      color: var(--text-main);
+    .current-odometer span {
+      color: var(--text-color);
       font-weight: 600;
     }
 
-    /* Logo Styling */
-    .business-logo {
-      width: 65px;
-      height: 65px;
-      object-fit: contain;
-      border-radius: 8px;
+    .logo {
+      height: 48px;
+      width: auto;
     }
 
-    /* Form Layout */
     .form-group {
       margin-bottom: 20px;
     }
 
     label {
       display: block;
-      font-size: 14px;
+      font-size: 0.9rem;
       font-weight: 600;
       margin-bottom: 8px;
-      color: var(--text-main);
+      color: var(--text-color);
     }
 
     input, select {
       width: 100%;
-      padding: 14px 16px;
+      padding: 14px;
       background-color: var(--input-bg);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      color: var(--text-main);
-      font-size: 16px;
+      border-radius: 8px;
+      color: var(--text-color);
+      font-size: 1rem;
       outline: none;
       transition: border-color 0.2s;
     }
 
     input:focus, select:focus {
-      border-color: var(--accent-orange);
+      border-color: var(--accent-color);
     }
 
-    select {
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22293%22%20height%3D%22293%22%3E%3Cpath%20fill%3D%22%239CA3AF%22%20d%3D%22M201.4%2092.1L146.5%20147%2091.6%2092.1c-4.7-4.7-12.3-4.7-17%200l-12%2012c-4.7%204.7-4.7%2012.3%200%2017l72.6%2072.6c4.7%204.7%2012.3%204.7%2017%200l72.6-72.6c4.7-4.7%204.7-12.3%200-17l-12-12c-4.8-4.7-12.4-4.7-17.1%200z%22%2F%3E%3C%2Fsvg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      background-size: 12px;
+    input::placeholder {
+      color: #666;
     }
 
-    /* Orange Primary Button */
-    .btn-primary {
+    .submit-btn {
       width: 100%;
       padding: 16px;
-      background-color: var(--accent-orange);
+      background-color: var(--accent-color);
       color: #000;
       border: none;
-      border-radius: 12px;
-      font-size: 16px;
+      border-radius: 8px;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       margin-top: 10px;
-      transition: background-color 0.2s;
+      transition: opacity 0.2s;
     }
 
-    .btn-primary:active {
-      background-color: var(--accent-hover);
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
-    /* Bottom Navigation Bar */
-    .nav-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 480px;
-      background-color: #1a1a1a;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0 18px 0;
+    .status-msg {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
     }
 
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      color: var(--text-muted);
-      font-size: 11px;
-      text-decoration: none;
-      cursor: pointer;
+    .status-msg.success {
+      background-color: #1b5e20;
+      color: #a5d6a7;
+      display: block;
     }
 
-    .nav-item.active {
-      color: var(--accent-orange);
-    }
-
-    .nav-icon {
-      width: 22px;
-      height: 22px;
-      fill: currentColor;
+    .status-msg.error {
+      background-color: #b71c1c;
+      color: #ef9a9a;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <!-- App Main Content Area -->
-  <div class="content-area">
-    
-    <!-- Top Header Area with Logo -->
-    <div class="header-container">
-      <div>
+  <div class="app-container">
+    <div class="header">
+      <div class="title-area">
         <h1>Log a Trip</h1>
-        <p class="sub-header">Current odometer: <span id="currentOdo">104,130 mi</span></p>
+        <div class="current-odometer">
+          Current odometer: <span id="latestOdo">Loading...</span>
+        </div>
       </div>
-      <!-- Logo in Top Right Corner -->
-      <img src="logo.png" alt="Company Logo" class="business-logo" onerror="this.style.display='none'">
+      <img src="logo.png" alt="Bowman Decor" class="logo" onerror="this.style.display='none'">
     </div>
 
-    <form id="tripForm">
+    <form id="mileageForm">
       <div class="form-group">
         <label for="odometer">Odometer Reading</label>
-        <input type="number" id="odometer" placeholder="104130" required>
+        <input 
+          type="number" 
+          id="odometer" 
+          name="odometer" 
+          placeholder="e.g. 110060" 
+          required 
+          inputmode="numeric"
+        >
       </div>
 
       <div class="form-group">
         <label for="reason">Reason for Travel</label>
-        <select id="reason" required>
+        <select id="reason" name="reason" required>
           <option value="" disabled selected>Select a reason...</option>
           <option value="Commute">Commute</option>
           <option value="Materials Pickup">Materials Pickup</option>
+          <option value="Site Visit">Site Visit</option>
           <option value="Personal">Personal</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="jobsite">Jobsite / Destination</label>
-        <input type="text" id="jobsite" placeholder="e.g. 17 Wynforte Lodge – Moira" required>
+        <input 
+          type="text" 
+          id="jobsite" 
+          name="jobsite" 
+          placeholder="e.g. 17 Wynforte Lodge - Moira" 
+          required
+        >
       </div>
 
-      <button type="submit" class="btn-primary">Log Trip</button>
+      <button type="submit" id="submitBtn" class="submit-btn">Log Trip</button>
     </form>
+
+    <div id="statusMsg" class="status-msg"></div>
   </div>
 
-  <!-- Bottom Navigation Bar -->
-  <nav class="nav-bar">
-    <div class="nav-item active">
-      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-      Log Trip
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      History
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-      Summary
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-      JobSites
-    </div>
-  </nav>
-
   <script>
-    // 1. PASTE YOUR APPS SCRIPT WEB APP URL BETWEEN THE QUOTES BELOW:
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxj-yplAQLzTKK-eylT0TFaXSEnxNY7wqy41MekamHW9yYTiv19TWRfbUjs83dmkQBo/exec";
+    // ⚠️ REPLACE THIS WITH YOUR NEW GOOGLE APPS SCRIPT WEB APP URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHcfeFIti7WDgwjQBapirqoOwizFKhICdj69nEow3QbT_PDknZ5DVUn02sS1alEv3r/exec";
 
-    // Load current odometer from sheet on startup
-    document.addEventListener("DOMContentLoaded", function() {
-      if (!SCRIPT_URL || SCRIPT_URL.includes("YOUR_APPS_SCRIPT")) return;
+    const form = document.getElementById('mileageForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMsg = document.getElementById('statusMsg');
+    const latestOdo = document.getElementById('latestOdo');
+
+    // Fetch last odometer reading on load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!SCRIPT_URL || SCRIPT_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+        latestOdo.textContent = "URL not set";
+        return;
+      }
 
       fetch(SCRIPT_URL)
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          if (data.lastOdometer) {
-            document.getElementById("currentOdo").innerText = Number(data.lastOdometer).toLocaleString() + " mi";
-            document.getElementById("odometer").placeholder = data.lastOdometer;
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.latestOdometer) {
+            latestOdo.textContent = Number(data.latestOdometer).toLocaleString() + " mi";
+          } else {
+            latestOdo.textContent = "Ready";
           }
         })
-        .catch(function(err) { console.log("Odo load error:", err); });
+        .catch(() => {
+          latestOdo.textContent = "Ready";
+        });
     });
 
-    // Submit trip form data to Google Sheet
-    document.getElementById("tripForm").addEventListener("submit", function(e) {
+    // Form submission handler
+    form.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      submitBtn.innerText = "Saving...";
+      // Lock UI
       submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving...';
+      statusMsg.className = 'status-msg';
+      statusMsg.style.display = 'none';
 
-      const payload = {
-        odometer: document.getElementById("odometer").value,
-        reason: document.getElementById("reason").value,
-        jobsite: document.getElementById("jobsite").value
-      };
+      const formData = new URLSearchParams();
+      formData.append('odometer', document.getElementById('odometer').value);
+      formData.append('reason', document.getElementById('reason').value);
+      formData.append('jobsite', document.getElementById('jobsite').value);
 
+      // no-cors fetch prevents redirection/CORS hangs on mobile
       fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData
       })
-      .then(function() {
-        alert("Trip logged successfully!");
-        document.getElementById("currentOdo").innerText = Number(payload.odometer).toLocaleString() + " mi";
-        document.getElementById("tripForm").reset();
-      })
-      .catch(function(err) {
-        alert("Error sending trip data!");
-        console.error(err);
-      })
-      .then(function() {
-        submitBtn.innerText = "Log Trip";
+      .then(() => {
+        // Success state
+        statusMsg.textContent = 'Trip logged successfully!';
+        statusMsg.className = 'status-msg success';
+        
+        // Reset form
+        form.reset();
         submitBtn.disabled = false;
+        submitBtn.textContent = 'Log Trip';
+
+        // Refresh page after 1.5 seconds to pull updated mileage
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+      })
+      .catch(err => {
+        console.error('Error logging trip:', err);
+        statusMsg.textContent = 'Failed to submit. Please check your connection.';
+        statusMsg.className = 'status-msg error';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Log Trip';
       });
     });
   </script>
