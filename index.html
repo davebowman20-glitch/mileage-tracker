@@ -10,266 +10,248 @@
       --card-bg: #1e1e1e;
       --input-bg: #2a2a2a;
       --accent-color: #ff9800;
+      --badge-commute: #0288d1;
+      --badge-materials: #f57c00;
+      --badge-site: #388e3c;
+      --badge-personal: #7b1fa2;
       --text-color: #ffffff;
-      --text-secondary: #b0b0b0;
-      --border-color: #333333;
+      --text-secondary: #aaaaaa;
+      --border-color: #2a2a2a;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; min-height: 100vh; padding-bottom: 75px; }
+    .app-container { width: 100%; max-width: 450px; padding: 16px; }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
+    /* Header */
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .title-area h1 { font-size: 1.5rem; font-weight: 700; }
+    .current-odometer { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+    .logo { height: 42px; width: auto; }
 
-    .app-container {
-      width: 100%;
-      max-width: 450px;
-      margin: 0 auto;
-    }
+    /* Tabs Content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding-top: 12px;
-    }
+    /* Form Styles */
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary); }
+    input, select { width: 100%; padding: 14px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; }
+    input:focus, select:focus { border-color: var(--accent-color); }
+    .submit-btn { width: 100%; padding: 16px; background-color: var(--accent-color); color: #000; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 8px; }
 
-    .title-area h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
+    /* Trip History List (Matching Image) */
+    .trip-card { background-color: var(--card-bg); border-radius: 12px; padding: 14px; margin-bottom: 12px; border: 1px solid #252525; position: relative; }
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .badge-group { display: flex; align-items: center; gap: 8px; }
+    .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: #fff; }
+    .badge.commute { background-color: var(--badge-commute); }
+    .badge.materials { background-color: var(--badge-materials); }
+    .badge.site { background-color: var(--badge-site); }
+    .badge.personal { background-color: var(--badge-personal); }
+    .miles-text { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    .delete-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 1.1rem; padding: 4px; }
+    .delete-btn:hover { color: #ff5252; }
+    .destination { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .card-meta { font-size: 0.8rem; color: var(--text-secondary); }
 
-    .current-odometer {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      margin-top: 4px;
-    }
+    /* Bottom Navigation Bar */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1a1a1a; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; max-width: 450px; margin: 0 auto; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: #777; text-decoration: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; background: none; border: none; width: 25%; }
+    .nav-item svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 4px; }
+    .nav-item.active { color: var(--accent-color); }
 
-    .current-odometer span {
-      color: var(--text-color);
-      font-weight: 600;
-    }
-
-    .logo {
-      height: 48px;
-      width: auto;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--text-color);
-    }
-
-    input, select {
-      width: 100%;
-      padding: 14px;
-      background-color: var(--input-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-color);
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--accent-color);
-    }
-
-    input::placeholder {
-      color: #666;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 16px;
-      background-color: var(--accent-color);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: opacity 0.2s;
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .status-msg {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      text-align: center;
-      display: none;
-    }
-
-    .status-msg.success {
-      background-color: #1b5e20;
-      color: #a5d6a7;
-      display: block;
-    }
-
-    .status-msg.error {
-      background-color: #b71c1c;
-      color: #ef9a9a;
-      display: block;
-    }
+    .status-msg { margin-top: 14px; padding: 10px; border-radius: 8px; font-size: 0.85rem; text-align: center; display: none; }
+    .status-msg.success { background-color: #1b5e20; color: #a5d6a7; display: block; }
+    .status-msg.error { background-color: #b71c1c; color: #ef9a9a; display: block; }
   </style>
 </head>
 <body>
 
   <div class="app-container">
+    
+    <!-- Header -->
     <div class="header">
       <div class="title-area">
-        <h1>Log a Trip</h1>
-        <div class="current-odometer">
-          Current odometer: <span id="latestOdo">Loading...</span>
-        </div>
+        <h1 id="pageTitle">Log Trip</h1>
+        <div class="current-odometer">Current odo: <span id="latestOdo">Loading...</span></div>
       </div>
-      <img src="logo.png" alt="Bowman Decor" class="logo" onerror="this.style.display='none'">
+      <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
     </div>
 
-    <form id="mileageForm">
-      <div class="form-group">
-        <label for="odometer">Odometer Reading</label>
-        <input 
-          type="number" 
-          id="odometer" 
-          name="odometer" 
-          placeholder="e.g. 110060" 
-          required 
-          inputmode="numeric"
-        >
+    <!-- TAB 1: LOG TRIP -->
+    <div id="tab-log" class="tab-content active">
+      <form id="mileageForm">
+        <div class="form-group">
+          <label for="odometer">Odometer Reading</label>
+          <input type="number" id="odometer" required inputmode="numeric" placeholder="e.g. 104130">
+        </div>
+        <div class="form-group">
+          <label for="reason">Reason for Travel</label>
+          <select id="reason" required>
+            <option value="" disabled selected>Select reason...</option>
+            <option value="Commute">Commute</option>
+            <option value="Materials Pickup">Materials Pickup</option>
+            <option value="Site Visit">Site Visit</option>
+            <option value="Personal">Personal</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="jobsite">Jobsite / Destination</label>
+          <input type="text" id="jobsite" required placeholder="e.g. 17 Wynforte Lodge">
+        </div>
+        <button type="submit" id="submitBtn" class="submit-btn">Log Trip</button>
+      </form>
+      <div id="statusMsg" class="status-msg"></div>
+    </div>
+
+    <!-- TAB 2: TRIP HISTORY -->
+    <div id="tab-history" class="tab-content">
+      <div id="historyList">Loading trips...</div>
+    </div>
+
+    <!-- TAB 3: SUMMARY -->
+    <div id="tab-summary" class="tab-content">
+      <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; text-align: center;">
+        <h3 style="color: var(--text-secondary); margin-bottom: 10px;">Total Trips Logged</h3>
+        <p style="font-size: 2rem; font-weight: bold; color: var(--accent-color);" id="totalTripsCount">0</p>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="reason">Reason for Travel</label>
-        <select id="reason" name="reason" required>
-          <option value="" disabled selected>Select a reason...</option>
-          <option value="Commute">Commute</option>
-          <option value="Materials Pickup">Materials Pickup</option>
-          <option value="Site Visit">Site Visit</option>
-          <option value="Personal">Personal</option>
-        </select>
+    <!-- TAB 4: JOBSITES -->
+    <div id="tab-jobsites" class="tab-content">
+      <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; text-align: center;">
+        <p style="color: var(--text-secondary);">Saved jobsites will appear here.</p>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="jobsite">Jobsite / Destination</label>
-        <input 
-          type="text" 
-          id="jobsite" 
-          name="jobsite" 
-          placeholder="e.g. 17 Wynforte Lodge - Moira" 
-          required
-        >
-      </div>
+  </div>
 
-      <button type="submit" id="submitBtn" class="submit-btn">Log Trip</button>
-    </form>
-
-    <div id="statusMsg" class="status-msg"></div>
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('log', 'Log Trip', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+      Log Trip
+    </button>
+    <button class="nav-item" onclick="switchTab('history', 'Trip History', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+      History
+    </button>
+    <button class="nav-item" onclick="switchTab('summary', 'Summary', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      Summary
+    </button>
+    <button class="nav-item" onclick="switchTab('jobsites', 'Job Sites', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      JobSites
+    </button>
   </div>
 
   <script>
-    // ⚠️ REPLACE THIS WITH YOUR NEW GOOGLE APPS SCRIPT WEB APP URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHcfeFIti7WDgwjQBapirqoOwizFKhICdj69nEow3QbT_PDknZ5DVUn02sS1alEv3r/exec";
+    // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqR0q3_uY7MdwQajbUENcTKw2Sf88-_9QrYP9DicZELO3CADpQ_4Ssr6hAoVroLmu6/exec
+";
 
-    const form = document.getElementById('mileageForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const statusMsg = document.getElementById('statusMsg');
-    const latestOdo = document.getElementById('latestOdo');
+    // Tab Navigation
+    function switchTab(tabId, title, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      btn.classList.add('active');
+      document.getElementById('pageTitle').textContent = title;
 
-    // Fetch last odometer reading on load
-    window.addEventListener('DOMContentLoaded', () => {
-      if (!SCRIPT_URL || SCRIPT_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
-        latestOdo.textContent = "URL not set";
-        return;
-      }
+      if (tabId === 'history') fetchHistory();
+    }
 
+    // Fetch Last Odometer
+    function loadLatestOdometer() {
       fetch(SCRIPT_URL)
         .then(res => res.json())
         .then(data => {
           if (data && data.latestOdometer) {
-            latestOdo.textContent = Number(data.latestOdometer).toLocaleString() + " mi";
-          } else {
-            latestOdo.textContent = "Ready";
+            document.getElementById('latestOdo').textContent = Number(data.latestOdometer).toLocaleString() + " mi";
           }
-        })
-        .catch(() => {
-          latestOdo.textContent = "Ready";
         });
-    });
+    }
+    window.addEventListener('DOMContentLoaded', loadLatestOdometer);
 
-    // Form submission handler
-    form.addEventListener('submit', function(e) {
+    // Form Submit
+    document.getElementById('mileageForm').addEventListener('submit', function(e) {
       e.preventDefault();
-
-      // Lock UI
+      const submitBtn = document.getElementById('submitBtn');
+      const statusMsg = document.getElementById('statusMsg');
+      
       submitBtn.disabled = true;
       submitBtn.textContent = 'Saving...';
-      statusMsg.className = 'status-msg';
-      statusMsg.style.display = 'none';
 
       const formData = new URLSearchParams();
       formData.append('odometer', document.getElementById('odometer').value);
       formData.append('reason', document.getElementById('reason').value);
       formData.append('jobsite', document.getElementById('jobsite').value);
 
-      // no-cors fetch prevents redirection/CORS hangs on mobile
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: formData
-      })
-      .then(() => {
-        // Success state
-        statusMsg.textContent = 'Trip logged successfully!';
-        statusMsg.className = 'status-msg success';
-        
-        // Reset form
-        form.reset();
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Log Trip';
-
-        // Refresh page after 1.5 seconds to pull updated mileage
-        setTimeout(() => {
-          location.reload();
-        }, 1500);
-      })
-      .catch(err => {
-        console.error('Error logging trip:', err);
-        statusMsg.textContent = 'Failed to submit. Please check your connection.';
-        statusMsg.className = 'status-msg error';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Log Trip';
-      });
+      fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
+        .then(() => {
+          statusMsg.textContent = 'Trip logged successfully!';
+          statusMsg.className = 'status-msg success';
+          document.getElementById('mileageForm').reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Log Trip';
+          loadLatestOdometer();
+        });
     });
+
+    // Fetch History & Build Cards
+    function fetchHistory() {
+      const container = document.getElementById('historyList');
+      container.innerHTML = "Loading trips...";
+
+      fetch(SCRIPT_URL + "?action=getHistory")
+        .then(res => res.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            container.innerHTML = "<p style='color:#777; text-align:center;'>No trips found.</p>";
+            return;
+          }
+
+          document.getElementById('totalTripsCount').textContent = data.length;
+          container.innerHTML = "";
+
+          data.forEach(trip => {
+            let badgeClass = "commute";
+            if (trip.reason.includes("Materials")) badgeClass = "materials";
+            if (trip.reason.includes("Site")) badgeClass = "site";
+            if (trip.reason.includes("Personal")) badgeClass = "personal";
+
+            let milesDisplay = (trip.miles && trip.miles > 0) ? `<span>${trip.miles} mi</span>` : '';
+
+            const card = document.createElement('div');
+            card.className = 'trip-card';
+            card.innerHTML = `
+              <div class="card-top">
+                <div class="badge-group">
+                  <span class="badge ${badgeClass}">${trip.reason}</span>
+                  ${milesDisplay ? `<span class="miles-text">${milesDisplay}</span>` : ''}
+                </div>
+                <button class="delete-btn" onclick="deleteTrip(${trip.rowIndex})">🗑️</button>
+              </div>
+              <div class="destination">${trip.jobsite}</div>
+              <div class="card-meta">${trip.timestamp} · Odo: ${Number(trip.odometer).toLocaleString()}</div>
+            `;
+            container.appendChild(card);
+          });
+        });
+    }
+
+    // Delete Trip Handler
+    function deleteTrip(rowIndex) {
+      if (confirm("Are you sure you want to delete this trip record?")) {
+        fetch(SCRIPT_URL + "?action=delete&rowIndex=" + rowIndex, { method: 'POST', mode: 'no-cors' })
+          .then(() => {
+            fetchHistory();
+            loadLatestOdometer();
+          });
+      }
+    }
   </script>
 </body>
 </html>
